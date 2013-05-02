@@ -34,10 +34,10 @@ for pageid, channel in [('10001', 'ROCK/POP/ & FOLK'), ('10003', 'CLASSICAL'), (
         except:
             pass
 
-with open('www/stations.json', 'wb') as station_json:
+with open('www/live-data/stations.json', 'wb') as station_json:
     station_json.write(json.dumps(stations))
 
-with open('www/stations.csv', 'wb') as station_csv:
+with open('www/live-data/stations.csv', 'wb') as station_csv:
     stationwriter = csv.DictWriter(station_csv, ['channel', 'name', 'call_sign', 'tagline', 'location', 'available_streams', 'img_url'])
     for station in stations:
         stationwriter.writerow(station)
