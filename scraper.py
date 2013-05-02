@@ -13,6 +13,8 @@ for pageid, channel in [('10001', 'ROCK/POP/ & FOLK'), ('10003', 'CLASSICAL'), (
     r = requests.get(url)
     soup = BeautifulSoup(r.content)
 
+    sub_stations = []
+
     station_list = soup.select('ul.mainlist li')
 
     for station in station_list:
@@ -24,18 +26,20 @@ for pageid, channel in [('10001', 'ROCK/POP/ & FOLK'), ('10003', 'CLASSICAL'), (
         station_dict['location'] = station.select('div.wrapid%s span.location' % pageid)[0].string
         station_dict['call_sign'] = station.select('span.lnk')[0].string
         station_dict['available_streams'] = station.select('a.arrow')[0]['href']
-        stations.append(station_dict)
+        sub_stations.append(station_dict)
 
     counter = 0
     for possible_image in soup.select('div#wrapper script')[11].string.split(';'):
         try:
-            stations[counter]['img_url'] = possible_image.strip().split('="')[1].split('.gif"')[0] + ".gif"
+            sub_stations[counter]['img_url'] = possible_image.strip().split('="')[1].split('.gif"')[0] + ".gif"
             counter += 1
         except:
             pass
 
+    stations += sub_stations
+
 with open('www/live-data/stations.json', 'wb') as station_json:
-    station_json.write(json.dumps(stations))
+    station_json.write('loadStations(%s)' % json.dumps(stations))
 
 with open('www/live-data/stations.csv', 'wb') as station_csv:
     stationwriter = csv.DictWriter(station_csv, ['channel', 'name', 'call_sign', 'tagline', 'location', 'available_streams', 'img_url'])
