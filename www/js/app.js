@@ -1437,15 +1437,24 @@ $(document).ready(function(){
     function showInfo(data, tabletop){
         var NAV = '<div class="streamspage"><div class="streamsdirectory layerid10001"><div id="streamsnav" class="clearfix"><ul class="navid10002"><li class="toptabid10001" data-sheet="Rock/Pop & Folk"><a href="#">Rock/Pop &amp; Folk</a></li><li class="toptabid10003" data-sheet="Classical"><a href="#">Classical</a></li><li class="toptabid10002" data-sheet="Jazz & Blues"><a href="#">Jazz &amp; Blues</a></li><li class="toptabid10006" data-sheet="Other"><a href="#">Other</a></li></ul></div></div><ul class="mainlist" id="streamItems"></ul></div>';
         $('#content').prepend(NAV);
+
         toggleCategory($('li.toptabid10001 a'));
         loadSheet($('li.toptabid10001').attr('data-sheet'));
+
         $('body').on('click', '#streamsnav a', function(){
             toggleCategory(this);
             loadSheet($(this).parent('li').attr('data-sheet'));
             return false;
         });
+
+        // Don't tell them how I live, Homer.
         $('body').on('click', 'li.streamItem a.streamExpander', function(){
             $($($(this)).parent().parent().children('div')[1]).toggle();
+            if ($($(this).children('img')).attr('src') == 'http://media.npr.org/chrome/music/stations/arrowrt.gif'){
+              $($(this).children('img')).attr('src', 'http://media.npr.org/chrome/music/stations/arrowdwn.gif');
+            } else {
+              $($(this).children('img')).attr('src', 'http://media.npr.org/chrome/music/stations/arrowrt.gif');
+            }
             return false;
         });
     }
