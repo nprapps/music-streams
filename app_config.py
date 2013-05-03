@@ -10,16 +10,16 @@ They will be exposed to users. Use environment variables instead.
 import os
 
 # This is just a readable name for the project.
-PROJECT_NAME = 'Code Switch: Changing Races'
+PROJECT_NAME = 'Music Streams'
 
 # This just changes the folder name that you're deploying to.
 # E.g., apps.npr.org/<project_slug>/index.html
-PROJECT_SLUG = 'codeswitch-changing-races'
+PROJECT_SLUG = 'music-streams'
 
 # This is what we're calling your project on github.
 # Don't change unless you change all your git stuff.
 # Which is hard.
-REPOSITORY_NAME = 'codeswitch-launch-essay'
+REPOSITORY_NAME = 'music-streams'
 
 PRODUCTION_S3_BUCKETS = ['apps.npr.org', 'apps2.npr.org']
 STAGING_S3_BUCKETS = ['stage-apps.npr.org']
