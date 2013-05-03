@@ -1412,30 +1412,43 @@
 
 }).call(this);
 
+/* OUR CODE STARTS HERE */
+
+var STREAM = '<li class="streamItem"><div class="<%= row %>"><a class="streamExpander" name="stream<% index %>" href="<%= availablestreams %>"><img id="expander<% index %>" src="http://media.npr.org/chrome/music/stations/arrowrt.gif" width="7" height="8" alt="Display description" class="expander" /><span class="lnk"><%= callsign %></span><span class="stntag"><%= name %></span><span class="stncity"><%= location %></span></a><a href="<%= availablestreams %>" target="_blank"><img src="http://media.npr.org/chrome/music/stations/icon_streams.gif" width="24" height="12" alt="" class="streamslnk" /></a><div class="spacer">&nbsp;</div></div><div id="descriptionTxt4"  class="closeDiv"><div class="wrapgenre"><div class="wrapid10001"><a href="<%= availablestreams %>" target="_blank"><img name="stationlogo41" width="75" height="75" src="<%= imageurl %>" class="stationlogo" /></a><p><span class="name"><%= name %></span><span class="location"><%= location %></span></p><p class="tagline"><%= tagline %></p><p><a href="<%= availablestreams %>" target="_blank" class="arrow">View available Stream(s)</a></p></div></div></div></li>';
+var NAV = '<div class="streamspage"><div class="streamsdirectory layerid10001"><div id="streamsnav" class="clearfix"><ul class="navid10002"><li class="toptabid10001" data-sheet="Rock/Pop & Folk"><a href="#">Rock/Pop &amp; Folk</a></li><li class="toptabid10003" data-sheet="Classical"><a href="#">Classical</a></li><li class="toptabid10002" data-sheet="Jazz & Blues"><a href="#">Jazz &amp; Blues</a></li><li class="toptabid10006" data-sheet="Other"><a href="#">Other</a></li></ul></div></div><ul class="mainlist" id="streamItems"></ul></div>';
+var CLOSED_ARROW = 'http://media.npr.org/chrome/music/stations/arrowrt.gif';
+var OPEN_ARROW = 'http://media.npr.org/chrome/music/stations/arrowdwn.gif';
+
 $(document).ready(function(){
     var tabletop = Tabletop.init({
         key: '0AjWpFWKpoFHqdFU3aU93QnlXNkFYY0lNVVJ4NV9NOUE',
         callback: showInfo,
         simpleSheet: false
     });
+
+    var stream_template = _.template(STREAM);
+
     function toggleCategory(element){
         $('#streamsnav li').removeAttr('id');
         $(element).parent('li').attr('id', 'selected');
     }
+
     function loadSheet(sheet){
         $('ul#streamItems').html('');
+
         _.each(tabletop.sheets(sheet).all(), function(element, index, list){
-            var STREAM;
             element.row = 'rowodd';
-            if (index%2 === 0) { element.row = 'roweven'; }
+            
+            if (index%2 === 0) {
+                element.row = 'roweven';
+            }
+
             element.index = index;
-            STREAM = '<li class="streamItem"><div class="<%= row %>"><a class="streamExpander" name="stream<% index %>" href="<%= availablestreams %>"><img id="expander<% index %>" src="http://media.npr.org/chrome/music/stations/arrowrt.gif" width="7" height="8" alt="Display description" class="expander" /><span class="lnk"><%= callsign %></span><span class="stntag"><%= name %></span><span class="stncity"><%= location %></span></a><a href="<%= availablestreams %>" target="_blank"><img src="http://media.npr.org/chrome/music/stations/icon_streams.gif" width="24" height="12" alt="" class="streamslnk" /></a><div class="spacer">&nbsp;</div></div><div id="descriptionTxt4"  class="closeDiv"><div class="wrapgenre"><div class="wrapid10001"><a href="<%= availablestreams %>" target="_blank"><img name="stationlogo41" width="75" height="75" src="<%= imageurl %>" class="stationlogo" /></a><p><span class="name"><%= name %></span><span class="location"><%= location %></span></p><p class="tagline"><%= tagline %></p><p><a href="<%= availablestreams %>" target="_blank" class="arrow">View available Stream(s)</a></p></div></div></div></li>';
-            var STREAM_HTML = _.template(STREAM);
-            $('ul#streamItems').append(STREAM_HTML(element));
+            $('ul#streamItems').append(stream_template(element));
         });
     }
+
     function showInfo(data, tabletop){
-        var NAV = '<div class="streamspage"><div class="streamsdirectory layerid10001"><div id="streamsnav" class="clearfix"><ul class="navid10002"><li class="toptabid10001" data-sheet="Rock/Pop & Folk"><a href="#">Rock/Pop &amp; Folk</a></li><li class="toptabid10003" data-sheet="Classical"><a href="#">Classical</a></li><li class="toptabid10002" data-sheet="Jazz & Blues"><a href="#">Jazz &amp; Blues</a></li><li class="toptabid10006" data-sheet="Other"><a href="#">Other</a></li></ul></div></div><ul class="mainlist" id="streamItems"></ul></div>';
         $('#content').prepend(NAV);
 
         toggleCategory($('li.toptabid10001 a'));
@@ -1449,12 +1462,17 @@ $(document).ready(function(){
 
         // Don't tell them how I live, Homer.
         $('body').on('click', 'li.streamItem a.streamExpander', function(){
-            $($($(this)).parent().parent().children('div')[1]).toggle();
-            if ($($(this).children('img')).attr('src') == 'http://media.npr.org/chrome/music/stations/arrowrt.gif'){
-              $($(this).children('img')).attr('src', 'http://media.npr.org/chrome/music/stations/arrowdwn.gif');
+            var $this = $(this);
+            var $img = $this.children('img').eq(0); 
+
+            $($($this).parent().parent().children('div')[1]).toggle();
+
+            if ($img.attr('src') == CLOSED_ARROW){
+                $img.attr('src', OPEN_ARROW);
             } else {
-              $($(this).children('img')).attr('src', 'http://media.npr.org/chrome/music/stations/arrowrt.gif');
+                $img.attr('src', CLOSED_ARROW);
             }
+
             return false;
         });
     }
